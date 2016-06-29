@@ -1,28 +1,28 @@
 (function(){
   angular
     .module("services")
-    .factory("operations", operationsService);
+    .factory("converter", converterService);
 
-  operationsService.$inject = ["operationConstants", "$http", "$q", "$window"];
+  converterService.$inject = ["$http", "$q", "$window"];
 
-  function operationsService(operations, $http, $q, $window){
+  function converterService($http, $q, $window){
     return {
-      executeOp: function(firstNumber, secondNumber, operation){
+      convert: function(amount){
         var deferred = $q.defer();
         var httpResult = $http({
-          url: "http://localhost:18188//api/operations",
+          url: "http://localhost:18188//api/converter",
           method: "POST",
           data: {
-            FirstNumber: firstNumber,
-            SecondNumber: secondNumber,
-            OperationType: operation
+            From: "USD",
+            To: "GBP",
+            Amount: amount
           }
         });
         httpResult.then(
           function(response){
             if(!response.data.IsSuccessfull){
               deferred.reject();
-              $window.alert("Operations  service failed");
+              $window.alert("Converter service failed");
             }
             deferred.resolve(response.data.Result);
           },
